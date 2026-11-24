@@ -3,6 +3,7 @@ const Report = require('../models/Report');
 const pdfService = require('../services/pdfService');
 const encryptionService = require('../services/encryptionService');
 const gridFsService = require('../services/gridFsService');
+const geminiService = require('../services/geminiService');
 
 /**
  * Upload and encrypt a new medical report or prescription
@@ -141,7 +142,6 @@ const getReportFile = async (req, res, next) => {
       return res.status(404).json({ error: 'Report not found.' });
     }
 
-    // Verify ownership (in Phase 6, doctor shares will also be verified here)
     const isOwner = report.owner.equals(req.user._id);
 
     if (!isOwner) {
@@ -216,9 +216,125 @@ const deleteReport = async (req, res, next) => {
   }
 };
 
+/**
+ * AI Autofill Endpoint: Normalizes uploaded file/photos to PDF and extracts form fields via Gemini
+ * POST /api/reports/autofill
+ */
+const autofillReport = async (req, res, next) => {
+  try {
+    const files = req.files && req.files.length > 0 ? req.files : req.file ? [req.file] : [];
+    if (files.length === 0) {
+      return res.status(400).json({
+        error: 'Please upload a medical report file or take a photo to autofill fields.',
+      });
+    }
+
+    // 1. Convert uploaded file/images to standard PDF buffer
+    const { pdfBuffer } = await pdfService.normalizeToPdf(files);
+
+    // 2. Feed PDF to Gemini for field extraction
+    const autofill = await geminiService.extractAutofill(pdfBuffer);
+
+    // Per brief: If autofill fails, form is left empty with no error popup.
+    const hasData = Boolean(
+      (autofill.reason && autofill.reason !== '') ||
+      (autofill.doctorName && autofill.doctorName !== 'Unknown') ||
+      autofill.visitDate
+    );
+
+    res.status(200).json({
+      success: true,
+      autofill,
+      message: hasData ? 'Filled automatically, please check.' : '',
+    });
+  } catch (error) {
+    // Return empty fields gracefully without breaking the client form popup
+    res.status(200).json({
+      success: false,
+      autofill: {
+        reason: '',
+        doctorName: '',
+        visitDate: null,
+        type: 'Other',
+      },
+      message: '',
+    });
+  }
+};
+
+/**
+ * AI Summary Endpoint: Generates or fetches simple-language medical report summary via Gemini
+ * POST /api/reports/:id/summary
+ */
+const generateSummary = async (req, res, next) => {
+  try {
+    const report = await Report.findById(req.params.id);
+    if (!report) {
+      return res.status(404).json({ error: 'Report not found.' });
+    }
+
+    // Check ownership
+    if (!report.owner.equals(req.user._id)) {
+      return res.status(403).json({
+        error: 'Access denied. You do not have permission to view this report.',
+      });
+    }
+
+    // If summary is already generated, return instantly (cache)
+    if (report.summary && report.summaryStatus === 'completed') {
+      return res.status(200).json({
+        summary: report.summary,
+        cached: true,
+        disclaimer: 'AI summary, not medical advice. Check the original with your doctor.',
+      });
+    }
+
+    // Mark as generating
+    report.summaryStatus = 'generating';
+    await report.save();
+
+    try {
+      // 1. Fetch encrypted PDF payload from GridFS
+      const { encryptedBuffer, metadata } =
+        await gridFsService.downloadEncryptedFile(report.file.gridFsId);
+
+      // 2. Decrypt in memory (never logged)
+      const decryptedPdf = encryptionService.decrypt(
+        encryptedBuffer,
+        metadata.iv,
+        metadata.authTag
+      );
+
+      // 3. Request Gemini structured summary
+      const summary = await geminiService.generateReportSummary(decryptedPdf);
+
+      // 4. Save summary in report document
+      report.summary = summary;
+      report.summaryStatus = 'completed';
+      await report.save();
+
+      res.status(200).json({
+        summary: report.summary,
+        cached: false,
+        disclaimer: 'AI summary, not medical advice. Check the original with your doctor.',
+      });
+    } catch (genErr) {
+      report.summaryStatus = 'failed';
+      await report.save();
+      return res.status(502).json({
+        error: 'Unable to generate AI summary at this time. Please check the original document.',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createReport,
   listReports,
   getReportFile,
   deleteReport,
+  autofillReport,
+  generateSummary,
 };

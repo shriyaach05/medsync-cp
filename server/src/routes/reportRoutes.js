@@ -4,10 +4,11 @@ const router = express.Router();
 const reportController = require('../controllers/reportController');
 const { protect } = require('../middleware/auth');
 const { requireRole } = require('../middleware/role');
+const { aiLimiter } = require('../middleware/rateLimiter');
 const upload = require('../middleware/upload');
 
 /**
- * Report Management Routes (Confidential Patient Medical Documents)
+ * Report Management & AI Analysis Routes
  */
 
 // Upload & encrypt report (Patient only)
@@ -17,6 +18,16 @@ router.post(
   requireRole('patient'),
   upload.array('files', 10),
   reportController.createReport
+);
+
+// Autofill form fields from uploaded document using Gemini (Patient only)
+router.post(
+  '/autofill',
+  protect,
+  requireRole('patient'),
+  aiLimiter,
+  upload.array('files', 10),
+  reportController.autofillReport
 );
 
 // List patient's reports grouped by month (Patient only)
@@ -32,6 +43,14 @@ router.get(
   '/:id/file',
   protect,
   reportController.getReportFile
+);
+
+// Generate or fetch cached AI summary table using Gemini
+router.post(
+  '/:id/summary',
+  protect,
+  aiLimiter,
+  reportController.generateSummary
 );
 
 // Delete report and encrypted GridFS file (Patient only)
