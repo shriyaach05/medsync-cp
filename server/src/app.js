@@ -10,6 +10,8 @@ const healthRoutes = require('./routes/healthRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const doctorRoutes = require('./routes/doctorRoutes');
+const shareRoutes = require('./routes/shareRoutes');
 
 const app = express();
 
@@ -63,6 +65,8 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/shares', shareRoutes);
 
 // Placeholder for future phase routes
 // Future phases will mount:
