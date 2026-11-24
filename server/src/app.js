@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { globalLimiter } = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 const healthRoutes = require('./routes/healthRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -55,8 +56,9 @@ app.use(
 // Apply Global Rate Limiting
 app.use(globalLimiter);
 
-// Mount Health Check Route
+// Mount API Routes
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 
 // Placeholder for future phase routes
 // Future phases will mount:
