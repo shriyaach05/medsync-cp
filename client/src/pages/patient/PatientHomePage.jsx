@@ -10,6 +10,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { PdfViewerModal } from '../../components/PdfViewerModal';
 import { AddDocumentModal } from './AddDocumentModal';
 import { SummaryModal } from './SummaryModal';
+import { ShareModal } from './ShareModal';
 import './PatientPortal.css';
 
 export function PatientHomePage() {
@@ -19,6 +20,10 @@ export function PatientHomePage() {
   const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [shareSuccess, setShareSuccess] = useState('');
+
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const [addOpen, setAddOpen] = useState(false);
   const [pdfReport, setPdfReport] = useState(null);
@@ -55,6 +60,22 @@ export function PatientHomePage() {
       .filter((group) => group.reports.length > 0);
   }, [timeline, doctorFilter]);
 
+  const allVisibleReports = useMemo(
+    () => filteredTimeline.flatMap((group) => group.reports),
+    [filteredTimeline]
+  );
+
+  const selectedReports = useMemo(
+    () => allVisibleReports.filter((r) => selectedIds.includes(r._id)),
+    [allVisibleReports, selectedIds]
+  );
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
   const handleSummaryGenerated = (reportId, summary) => {
     setTimeline((prev) =>
       prev.map((group) => ({
@@ -71,6 +92,7 @@ export function PatientHomePage() {
     setDeleting(true);
     try {
       await api.delete(`/reports/${deleteTarget._id}`);
+      setSelectedIds((prev) => prev.filter((id) => id !== deleteTarget._id));
       setDeleteTarget(null);
       await fetchReports();
     } catch (err) {
@@ -90,18 +112,24 @@ export function PatientHomePage() {
   };
 
   return (
-    <div>
+    <div style={{ paddingBottom: selectedIds.length > 0 ? '84px' : '0' }}>
       <div className="ms-page-header">
         <div>
           <h1>My Medical Reports</h1>
           <p className="ms-page-subtitle">
-            All your reports, prescriptions, and lab results encrypted in one place.
+            Select one or more reports to send them securely to a doctor.
           </p>
         </div>
         <Button onClick={() => setAddOpen(true)} size="lg">
           <span aria-hidden="true">＋</span> Add document
         </Button>
       </div>
+
+      {shareSuccess && (
+        <div className="ms-alert ms-alert--success" role="status">
+          {shareSuccess}
+        </div>
+      )}
 
       {doctorFilter && (
         <div className="ms-filter-bar">
@@ -151,48 +179,91 @@ export function PatientHomePage() {
             <section key={group.month}>
               <h2 className="ms-month-group__title">{group.displayMonth}</h2>
               <div className="ms-report-list">
-                {group.reports.map((report) => (
-                  <Card key={report._id} className="ms-report-card">
-                    <div className="ms-report-card__top">
-                      <div>
-                        <h3 className="ms-report-card__title">{report.reason}</h3>
-                        <div className="ms-report-card__meta">
-                          <span>🩺 {report.doctorName}</span>
-                          <span>📅 {formatDate(report.visitDate)}</span>
+                {group.reports.map((report) => {
+                  const isSelected = selectedIds.includes(report._id);
+                  return (
+                    <Card
+                      key={report._id}
+                      className={`ms-report-card ${
+                        isSelected ? 'ms-report-card--selected' : ''
+                      }`}
+                    >
+                      <div className="ms-report-card__top">
+                        <div className="ms-report-card__select-row">
+                          <input
+                            type="checkbox"
+                            className="ms-checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelect(report._id)}
+                            aria-label={`Select ${report.reason} to share`}
+                          />
+                          <div>
+                            <h3 className="ms-report-card__title">{report.reason}</h3>
+                            <div className="ms-report-card__meta">
+                              <span>🩺 {report.doctorName}</span>
+                              <span>📅 {formatDate(report.visitDate)}</span>
+                            </div>
+                          </div>
                         </div>
+                        <Badge>{report.type}</Badge>
                       </div>
-                      <Badge>{report.type}</Badge>
-                    </div>
 
-                    <div className="ms-report-card__actions">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setPdfReport(report)}
-                      >
-                        📄 View PDF
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setSummaryReport(report)}
-                      >
-                        ✨ {report.summaryStatus === 'completed' ? 'View Summary' : 'Summary'}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setDeleteTarget(report)}
-                        style={{ color: 'var(--color-error)' }}
-                      >
-                        🗑 Delete
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
+                      <div className="ms-report-card__actions">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setPdfReport(report)}
+                        >
+                          📄 View PDF
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setSummaryReport(report)}
+                        >
+                          ✨ {report.summaryStatus === 'completed' ? 'View Summary' : 'Summary'}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteTarget(report)}
+                          style={{ color: 'var(--color-error)' }}
+                        >
+                          🗑 Delete
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </section>
           ))}
+        </div>
+      )}
+
+      {/* Floating Share Action Bar */}
+      {selectedIds.length > 0 && (
+        <div className="ms-floating-bar" role="region" aria-label="Share selected reports">
+          <span className="ms-floating-bar__count">
+            {selectedIds.length} {selectedIds.length === 1 ? 'report' : 'reports'} selected
+          </span>
+          <div className="ms-floating-bar__actions">
+            <Button
+              size="sm"
+              variant="ghost"
+              style={{ color: 'var(--color-surface)' }}
+              onClick={() => setSelectedIds([])}
+            >
+              Clear
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => setShareOpen(true)}
+            >
+              Send to doctor
+            </Button>
+          </div>
         </div>
       )}
 
@@ -214,6 +285,18 @@ export function PatientHomePage() {
         onClose={() => setSummaryReport(null)}
         report={summaryReport}
         onSummaryGenerated={handleSummaryGenerated}
+      />
+
+      <ShareModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        selectedReports={selectedReports}
+        onShared={(doctor, count) => {
+          setSelectedIds([]);
+          setShareSuccess(
+            `Sent ${count} ${count === 1 ? 'report' : 'reports'} to Dr. ${doctor.name}.`
+          );
+        }}
       />
 
       <Modal
