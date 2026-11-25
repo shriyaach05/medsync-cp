@@ -1,0 +1,142 @@
+.ms-auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-md);
+  background-color: var(--color-bg);
+}
+
+.ms-auth-topbar {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.ms-auth-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.ms-auth-brand__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.ms-auth-card {
+  width: 100%;
+  max-width: 480px;
+}
+
+.ms-auth-header {
+  margin-bottom: var(--space-lg);
+}
+
+.ms-auth-header h1 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: 6px;
+}
+
+.ms-auth-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.ms-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Role selector */
+.ms-role-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ms-role-group__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.ms-role-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.ms-role-btn {
+  min-height: 48px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  transition: all var(--transition-fast);
+}
+
+.ms-role-btn:hover {
+  background-color: var(--color-elevated);
+  color: var(--color-text-primary);
+}
+
+.ms-role-btn--active {
+  border-color: var(--color-accent);
+  background-color: var(--color-elevated);
+  color: var(--color-accent-strong);
+}
+
+.ms-auth-error {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background-color: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.ms-auth-divider {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.ms-auth-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 480px) {
+  .ms-auth-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
