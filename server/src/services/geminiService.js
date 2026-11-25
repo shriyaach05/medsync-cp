@@ -7,8 +7,8 @@ const { z } = require('zod');
  * Strictly enforces zero-diagnosis and fact-bound JSON output schemas.
  */
 
-const DEFAULT_MODEL = 'gemini-2.5-flash';
-const DEFAULT_FALLBACK_MODEL = 'gemini-1.5-flash';
+const DEFAULT_MODEL = 'gemini-flash-latest';
+const DEFAULT_FALLBACK_MODEL = 'gemini-flash-lite-latest';
 const GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 /**
@@ -106,6 +106,7 @@ const requestGemini = async (model, apiKey, pdfBuffer, promptText) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
+    signal: AbortSignal.timeout(20000),
   });
 
   return response;
@@ -172,6 +173,18 @@ const callGeminiWithRetryAndFallback = async (pdfBuffer, promptText) => {
 };
 
 /**
+ * Strip optional markdown code fences if Gemini wraps JSON in ```json ... ```
+ */
+const parseGeminiJson = (rawText) => {
+  const cleaned = String(rawText || '')
+    .trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+  return JSON.parse(cleaned);
+};
+
+/**
  * Job 1: Extract form fields for Add Document popup
  * @param {Buffer} pdfBuffer
  * @returns {Promise<{ reason: string, doctorName: string, visitDate: string|null, type: string }>}
@@ -192,7 +205,7 @@ Strict Rules:
 
   try {
     const jsonText = await callGeminiWithRetryAndFallback(pdfBuffer, prompt);
-    const parsed = JSON.parse(jsonText);
+    const parsed = parseGeminiJson(jsonText);
     const validated = autofillOutputSchema.parse(parsed);
     return validated;
   } catch (error) {
@@ -246,7 +259,7 @@ Strict Rules:
 - Output valid JSON ONLY.`;
 
   const jsonText = await callGeminiWithRetryAndFallback(pdfBuffer, prompt);
-  const parsed = JSON.parse(jsonText);
+  const parsed = parseGeminiJson(jsonText);
   const validated = summaryOutputSchema.parse(parsed);
   return validated;
 };

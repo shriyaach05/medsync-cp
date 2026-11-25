@@ -134,9 +134,9 @@ export function ShareModal({ isOpen, onClose, selectedReports, onShared }) {
           )}
 
           {!searching && query.trim() && doctors.length === 0 && !searchError && (
-            <p className="ms-page-subtitle" style={{ marginTop: '8px' }}>
-              No registered doctors matched "{query.trim()}".
-            </p>
+            <div className="ms-alert ms-alert--warning" role="status" style={{ marginTop: '8px', marginBottom: 0 }}>
+              This doctor is not registered.
+            </div>
           )}
 
           {doctors.length > 0 && (

@@ -120,9 +120,27 @@ export function PatientHomePage() {
             Select one or more reports to send them securely to a doctor.
           </p>
         </div>
-        <Button onClick={() => setAddOpen(true)} size="lg">
-          <span aria-hidden="true">＋</span> Add document
-        </Button>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {allVisibleReports.length > 0 && (
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => {
+                if (selectedIds.length === 0) {
+                  setError('Please select at least one report using its checkbox, then click "Send to doctor".');
+                } else {
+                  setError('');
+                  setShareOpen(true);
+                }
+              }}
+            >
+              📤 Send to doctor {selectedIds.length > 0 ? `(${selectedIds.length})` : ''}
+            </Button>
+          )}
+          <Button onClick={() => setAddOpen(true)} size="lg">
+            <span aria-hidden="true">＋</span> Add document
+          </Button>
+        </div>
       </div>
 
       {shareSuccess && (
