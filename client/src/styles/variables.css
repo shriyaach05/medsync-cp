@@ -1,0 +1,93 @@
+/* ============================================================
+   MedSync — CSS Custom Properties (Theme Variables)
+   
+   HOW THIS WORKS:
+   We define two sets of colors — one for light mode, one for dark.
+   The [data-theme="dark"] selector overrides the defaults.
+   Every component uses these variables (e.g. var(--color-bg))
+   so changing the theme swaps ALL colors instantly.
+   ============================================================ */
+
+/* Light theme — the default */
+:root {
+  /* Surfaces */
+  --color-bg: #F5EFEB;
+  --color-surface: #FFFFFF;
+  --color-elevated: #E6EEF4;
+  --color-border: #C8D9E6;
+
+  /* Text */
+  --color-text-primary: #2F4156;
+  --color-text-secondary: #567C8D;
+
+  /* Accents */
+  --color-accent: #567C8D;
+  --color-accent-strong: #2F4156;
+
+  /* Functional colors */
+  --color-success: #2D8A56;
+  --color-warning: #C4841D;
+  --color-error: #C0392B;
+  --color-info: #567C8D;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(47, 65, 86, 0.08);
+  --shadow-md: 0 4px 12px rgba(47, 65, 86, 0.10);
+  --shadow-lg: 0 8px 24px rgba(47, 65, 86, 0.12);
+
+  /* Spacing scale (multiples of 4px) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Typography */
+  --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --max-content-width: 900px;
+}
+
+/* Dark theme — activated when <html data-theme="dark"> */
+[data-theme='dark'] {
+  --color-bg: #0F1722;
+  --color-surface: #1A2636;
+  --color-elevated: #2F4156;
+  --color-border: #3E5469;
+
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #C8D9E6;
+
+  --color-accent: #7FA8BA;
+  --color-accent-strong: #C8D9E6;
+
+  --color-success: #3DBA6F;
+  --color-warning: #E0A83D;
+  --color-error: #E05C4F;
+  --color-info: #7FA8BA;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

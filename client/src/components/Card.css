@@ -1,0 +1,16 @@
+.ms-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.ms-card--hoverable:hover {
+  background-color: var(--color-elevated);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}

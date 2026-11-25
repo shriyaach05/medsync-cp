@@ -68,14 +68,6 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/shares', shareRoutes);
 
-// Placeholder for future phase routes
-// Future phases will mount:
-// app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
-// app.use('/api/doctors', doctorRoutes);
-// app.use('/api/reports', reportRoutes);
-// app.use('/api/shares', shareRoutes);
-
 // Catch-all 404 handler for unknown routes
 app.use((req, res) => {
   res.status(404).json({
