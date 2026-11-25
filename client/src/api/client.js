@@ -2,12 +2,25 @@
  * MedSync API Client
  *
  * A lightweight wrapper around the browser's `fetch()` API.
- * - Uses `credentials: 'include'` so httpOnly JWT cookies are sent automatically.
+ * - Sends JWT as `Authorization: Bearer <token>` in-memory (cross-origin safe).
+ * - Falls back to httpOnly cookie via `credentials: 'include'` for same-origin / dev.
  * - Uses VITE_API_URL (or `/api` via Vite dev proxy).
  * - Converts server error responses into clean Error objects with user-friendly messages.
  */
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+// In-memory token store — avoids cross-site cookie issues (SameSite restrictions)
+let _authToken = null;
+
+/**
+ * Set or clear the in-memory JWT used for authenticated requests.
+ * Called by AuthContext after login / register / restore.
+ * @param {string|null} token
+ */
+export function setAuthToken(token) {
+  _authToken = token;
+}
 
 export class ApiError extends Error {
   constructor(message, status, details = null) {
@@ -27,10 +40,15 @@ async function request(endpoint, options = {}) {
   const { body, isFormData = false, headers = {}, ...rest } = options;
 
   const config = {
-    credentials: 'include',
+    credentials: 'include', // still sends cookie in same-origin / dev
     headers: { ...headers },
     ...rest,
   };
+
+  // Attach Bearer token when available (takes priority over cookie cross-origin)
+  if (_authToken) {
+    config.headers['Authorization'] = `Bearer ${_authToken}`;
+  }
 
   if (body !== undefined) {
     if (isFormData || body instanceof FormData) {

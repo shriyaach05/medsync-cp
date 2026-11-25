@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { api } from '../api/client';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { api, setAuthToken } from '../api/client';
 import { useTheme } from './ThemeContext';
 
 const AuthContext = createContext(null);
@@ -11,8 +11,13 @@ export function AuthProvider({ children }) {
 
   // Sync theme from user profile when available
   const applyUser = useCallback(
-    (userData) => {
+    (userData, token) => {
       setUser(userData);
+      if (token) {
+        // Store token in memory + sessionStorage so it survives page refresh
+        setAuthToken(token);
+        try { sessionStorage.setItem('medsync_token', token); } catch {}
+      }
       if (userData?.theme) {
         setTheme(userData.theme);
       }
@@ -20,17 +25,27 @@ export function AuthProvider({ children }) {
     [setTheme]
   );
 
-  // Restore session on initial app load via httpOnly cookie
+  // Restore session on initial app load — try token from sessionStorage first,
+  // then fall back to httpOnly cookie (works in same-origin / dev)
   const refreshUser = useCallback(async () => {
     try {
+      // Restore in-memory token from sessionStorage across page refreshes
+      try {
+        const stored = sessionStorage.getItem('medsync_token');
+        if (stored) setAuthToken(stored);
+      } catch {}
+
       const data = await api.get('/auth/me');
-      applyUser(data.user);
+      setUser(data.user);
+      if (data.user?.theme) setTheme(data.user.theme);
     } catch {
       setUser(null);
+      try { sessionStorage.removeItem('medsync_token'); } catch {}
+      setAuthToken(null);
     } finally {
       setLoading(false);
     }
-  }, [applyUser]);
+  }, [setTheme]);
 
   useEffect(() => {
     refreshUser();
@@ -38,13 +53,13 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const data = await api.post('/auth/login', { email, password });
-    applyUser(data.user);
+    applyUser(data.user, data.token);
     return data.user;
   };
 
   const register = async (formData) => {
     const data = await api.post('/auth/register', formData);
-    applyUser(data.user);
+    applyUser(data.user, data.token);
     return data.user;
   };
 
@@ -53,11 +68,13 @@ export function AuthProvider({ children }) {
       await api.post('/auth/logout');
     } finally {
       setUser(null);
+      setAuthToken(null);
+      try { sessionStorage.removeItem('medsync_token'); } catch {}
     }
   };
 
   const updateUser = (updatedUser) => {
-    applyUser(updatedUser);
+    applyUser(updatedUser, null);
   };
 
   return (
