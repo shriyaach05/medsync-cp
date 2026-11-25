@@ -27,13 +27,24 @@ app.use(
 );
 
 // Cross-Origin Resource Sharing (CORS) with credentials enabled for httpOnly cookies
-const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+const configuredOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const devOrigins =
+  process.env.NODE_ENV === 'production'
+    ? []
+    : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+const allowedOrigins = new Set([...configuredOrigins, ...devOrigins]);
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
-      if (origin === allowedOrigin || origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173') {
+      if (allowedOrigins.has(origin)) {
         return callback(null, true);
       }
       return callback(new Error(`Origin ${origin} not allowed by CORS`));
