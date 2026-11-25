@@ -1,0 +1,149 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "MedSync API",
+  "collectionId": "medsync-collection",
+  "dateExported": "2026-11-24",
+  "version": "1.1",
+  "folders": [
+    {
+      "name": "1. Health",
+      "id": "f_health"
+    },
+    {
+      "name": "2. Auth & Sessions",
+      "id": "f_auth"
+    },
+    {
+      "name": "3. User Profile & Account",
+      "id": "f_users"
+    },
+    {
+      "name": "4. Doctors",
+      "id": "f_doctors"
+    },
+    {
+      "name": "5. Reports & AI",
+      "id": "f_reports"
+    },
+    {
+      "name": "6. Shares & Doctor Inbox",
+      "id": "f_shares"
+    }
+  ],
+  "requests": [
+    {
+      "name": "Health Check",
+      "method": "GET",
+      "url": "http://localhost:5000/api/health",
+      "folderId": "f_health"
+    },
+    {
+      "name": "Register Patient",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/register",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"role\": \"patient\",\n  \"name\": \"Alice Johnson\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\",\n  \"guardianPhone\": \"+1234567890\"\n}"
+      },
+      "folderId": "f_auth"
+    },
+    {
+      "name": "Register Doctor",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/register",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"role\": \"doctor\",\n  \"name\": \"Dr. Gregory House\",\n  \"email\": \"house@example.com\",\n  \"password\": \"doctorPassword123\",\n  \"department\": \"Diagnostic Medicine\",\n  \"yearsOfExperience\": 20,\n  \"phone\": \"+1987654321\"\n}"
+      },
+      "folderId": "f_auth"
+    },
+    {
+      "name": "Login",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/login",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+      },
+      "folderId": "f_auth"
+    },
+    {
+      "name": "Get Current User (Me)",
+      "method": "GET",
+      "url": "http://localhost:5000/api/auth/me",
+      "folderId": "f_auth"
+    },
+    {
+      "name": "Logout",
+      "method": "POST",
+      "url": "http://localhost:5000/api/auth/logout",
+      "folderId": "f_auth"
+    },
+    {
+      "name": "Update Profile",
+      "method": "PATCH",
+      "url": "http://localhost:5000/api/users/me",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Alice J. Connor\",\n  \"theme\": \"dark\",\n  \"guardianPhone\": \"+19998887777\"\n}"
+      },
+      "folderId": "f_users"
+    },
+    {
+      "name": "Change Password",
+      "method": "PATCH",
+      "url": "http://localhost:5000/api/users/me/password",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newSecurePassword890\"\n}"
+      },
+      "folderId": "f_users"
+    },
+    {
+      "name": "Search Doctors",
+      "method": "GET",
+      "url": "http://localhost:5000/api/doctors/search?q=House",
+      "folderId": "f_doctors"
+    },
+    {
+      "name": "Get Doctors Visited",
+      "method": "GET",
+      "url": "http://localhost:5000/api/doctors/visited",
+      "folderId": "f_doctors"
+    },
+    {
+      "name": "List Reports (Monthly Timeline)",
+      "method": "GET",
+      "url": "http://localhost:5000/api/reports",
+      "folderId": "f_reports"
+    },
+    {
+      "name": "Generate or Fetch AI Summary",
+      "method": "POST",
+      "url": "http://localhost:5000/api/reports/{{REPORT_ID}}/summary",
+      "folderId": "f_reports"
+    },
+    {
+      "name": "Create Share (Send to Doctor)",
+      "method": "POST",
+      "url": "http://localhost:5000/api/shares",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"doctorId\": \"{{DOCTOR_ID}}\",\n  \"reportIds\": [\"{{REPORT_ID}}\"],\n  \"duration\": \"24h\"\n}"
+      },
+      "folderId": "f_shares"
+    },
+    {
+      "name": "Doctor Inbox (with live countdown)",
+      "method": "GET",
+      "url": "http://localhost:5000/api/shares/inbox",
+      "folderId": "f_shares"
+    },
+    {
+      "name": "Doctor Stream Shared PDF",
+      "method": "GET",
+      "url": "http://localhost:5000/api/shares/{{SHARE_ID}}/reports/{{REPORT_ID}}/file",
+      "folderId": "f_shares"
+    }
+  ]
+}
