@@ -45,11 +45,11 @@
 /* Variants */
 .ms-btn--primary {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 .ms-btn--primary:hover:not(:disabled) {
   background-color: var(--color-accent-strong);
-  color: var(--color-surface);
+  color: var(--color-on-accent);
 }
 
 .ms-btn--secondary {

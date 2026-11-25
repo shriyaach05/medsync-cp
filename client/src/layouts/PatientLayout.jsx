@@ -16,6 +16,9 @@ export function PatientLayout() {
 
   return (
     <div className="ms-layout">
+      <a href="#main-content" className="ms-skip-link">
+        Skip to main content
+      </a>
       <header className="ms-mobile-header">
         <div className="ms-brand">
           <span className="ms-brand__logo" aria-hidden="true">+</span>
@@ -72,7 +75,7 @@ export function PatientLayout() {
         </div>
       </aside>
 
-      <main className="ms-main">
+      <main id="main-content" className="ms-main" tabIndex={-1}>
         <div className="ms-main__inner">
           <Outlet />
         </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import { Card } from '../../components/Card';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { SkeletonCard } from '../../components/SkeletonCard';
 import { EmptyState } from '../../components/EmptyState';
 import { Button } from '../../components/Button';
 import './PatientPortal.css';
@@ -58,7 +58,7 @@ export function DoctorsVisitedPage() {
       )}
 
       {loading ? (
-        <LoadingSpinner message="Loading your doctors..." />
+        <SkeletonCard count={2} />
       ) : doctors.length === 0 ? (
         <EmptyState
           icon="🩺"

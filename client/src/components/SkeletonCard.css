@@ -1,0 +1,41 @@
+.ms-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ms-skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ms-skeleton-line {
+  height: 16px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-elevated);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.ms-skeleton-line--title {
+  width: 58%;
+  height: 20px;
+}
+
+.ms-skeleton-line--meta {
+  width: 38%;
+}
+
+.ms-skeleton-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.ms-skeleton-pill {
+  width: 96px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-elevated);
+  animation: pulse 1.4s ease-in-out infinite;
+}

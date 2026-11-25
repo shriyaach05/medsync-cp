@@ -5,7 +5,7 @@ import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { Modal } from '../../components/Modal';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { SkeletonCard } from '../../components/SkeletonCard';
 import { EmptyState } from '../../components/EmptyState';
 import { PdfViewerModal } from '../../components/PdfViewerModal';
 import { AddDocumentModal } from './AddDocumentModal';
@@ -147,13 +147,20 @@ export function PatientHomePage() {
       )}
 
       {error && (
-        <div className="ms-alert ms-alert--error" role="alert">
-          {error}
+        <div
+          className="ms-alert ms-alert--error"
+          role="alert"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}
+        >
+          <span>{error}</span>
+          <Button size="sm" variant="secondary" onClick={fetchReports}>
+            Try again
+          </Button>
         </div>
       )}
 
       {loading ? (
-        <LoadingSpinner message="Loading your medical timeline..." />
+        <SkeletonCard count={3} />
       ) : filteredTimeline.length === 0 ? (
         <EmptyState
           icon="📋"

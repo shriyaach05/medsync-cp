@@ -23,6 +23,7 @@
   /* Accents */
   --color-accent: #567C8D;
   --color-accent-strong: #2F4156;
+  --color-on-accent: #FFFFFF;
 
   /* Functional colors */
   --color-success: #2D8A56;
@@ -81,6 +82,7 @@
 
   --color-accent: #7FA8BA;
   --color-accent-strong: #C8D9E6;
+  --color-on-accent: #0F1722;
 
   --color-success: #3DBA6F;
   --color-warning: #E0A83D;

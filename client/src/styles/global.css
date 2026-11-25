@@ -149,3 +149,26 @@ input, textarea, select {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ---- Skip link for keyboard accessibility ---- */
+.ms-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 2000;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent-strong);
+  color: var(--color-surface);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ms-skip-link:focus {
+  top: 16px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
