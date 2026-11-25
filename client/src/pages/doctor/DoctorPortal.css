@@ -1,0 +1,107 @@
+.ms-inbox-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.ms-patient-group__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ms-patient-group__name {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.ms-patient-group__email {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.ms-share-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ms-share-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.ms-share-card__received {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.ms-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background-color: var(--color-elevated);
+  color: var(--color-accent-strong);
+  border: 1px solid var(--color-border);
+}
+
+.ms-countdown--urgent {
+  background-color: rgba(192, 57, 43, 0.12);
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.ms-shared-reports {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ms-shared-report-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-elevated);
+  border: 1px solid var(--color-border);
+}
+
+.ms-shared-report-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ms-shared-report-row__title {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.ms-shared-report-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
