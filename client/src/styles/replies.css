@@ -1,0 +1,142 @@
+/* ============================================================
+   Doctor replies: editor fields, reply cards, search bar
+   ============================================================ */
+
+/* Multi-line text field (used by the reply editor) */
+.ms-textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 14px 18px;
+  background-color: var(--field-bg, var(--color-surface));
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ms-textarea::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.85;
+}
+
+.ms-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(87, 112, 122, 0.22);
+}
+
+.ms-reply-editor__context {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Doctor inbox: patient search */
+.ms-search-bar {
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+
+/* Doctor inbox: View PDF + Reply buttons side by side */
+.ms-shared-report-row {
+  flex-wrap: wrap;
+}
+
+.ms-shared-report-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Reply cards (doctor "Replies" page and patient "Replies" page) */
+.ms-reply-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  gap: 24px;
+}
+
+.ms-reply-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ms-reply-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ms-reply-card__title {
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.ms-reply-card__sub {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.ms-reply-card__record,
+.ms-reply-card__preview,
+.ms-reply-card__meta,
+.ms-reply-card__ended {
+  margin: 0;
+}
+
+.ms-reply-card__preview {
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ms-reply-card__meta,
+.ms-reply-card__ended {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.ms-reply-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ms-reply-card__chips span {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-elevated);
+  border: 1px solid var(--color-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.ms-reply-card__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.ms-reply-card__actions .ms-btn {
+  width: 100%;
+  min-height: 46px;
+}
+
+.ms-reply-card__actions .ms-btn--wide,
+.ms-reply-card__ended {
+  grid-column: 1 / -1;
+}
+
+/* Patient home: "View Reply" button spans the full width of the report card */
+.ms-report-card__actions .ms-btn--reply {
+  grid-column: 1 / -1;
+}

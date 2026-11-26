@@ -14,9 +14,11 @@ import { PatientHomePage } from './pages/patient/PatientHomePage';
 import { DoctorsVisitedPage } from './pages/patient/DoctorsVisitedPage';
 import { PatientProfilePage } from './pages/patient/PatientProfilePage';
 import { PatientSettingsPage } from './pages/patient/PatientSettingsPage';
+import { PatientRepliesPage } from './pages/patient/PatientRepliesPage';
 
 import { DoctorInboxPage } from './pages/doctor/DoctorInboxPage';
 import { DoctorProfilePage } from './pages/doctor/DoctorProfilePage';
+import { DoctorRepliesPage } from './pages/doctor/DoctorRepliesPage';
 
 /**
  * Redirects "/" to the user's role home if logged in, or to /login otherwise.
@@ -74,6 +76,7 @@ export default function App() {
         <Route path="/patient" element={<PatientLayout />}>
           <Route index element={<PatientHomePage />} />
           <Route path="doctors" element={<DoctorsVisitedPage />} />
+          <Route path="replies" element={<PatientRepliesPage />} />
           <Route path="profile" element={<PatientProfilePage />} />
           <Route path="settings" element={<PatientSettingsPage />} />
         </Route>
@@ -83,6 +86,7 @@ export default function App() {
       <Route element={<ProtectedRoute allowedRole="doctor" />}>
         <Route path="/doctor" element={<DoctorLayout />}>
           <Route index element={<DoctorInboxPage />} />
+          <Route path="replies" element={<DoctorRepliesPage />} />
           <Route path="profile" element={<DoctorProfilePage />} />
         </Route>
       </Route>

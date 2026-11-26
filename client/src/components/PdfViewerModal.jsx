@@ -6,8 +6,10 @@ import { LoadingSpinner } from './LoadingSpinner';
 
 /**
  * Displays a decrypted PDF from a protected backend endpoint inside a modal iframe.
+ * Set allowDownload={false} (used for doctors) to hide the Download button and the
+ * browser's built-in PDF toolbar (which also contains download/print buttons).
  */
-export function PdfViewerModal({ isOpen, onClose, title, endpoint }) {
+export function PdfViewerModal({ isOpen, onClose, title, endpoint, allowDownload = true }) {
   const [blobUrl, setBlobUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -55,7 +57,7 @@ export function PdfViewerModal({ isOpen, onClose, title, endpoint }) {
       maxWidth="820px"
       footer={
         <>
-          {blobUrl && (
+          {allowDownload && blobUrl && (
             <a href={blobUrl} download={`${title || 'report'}.pdf`}>
               <Button variant="secondary">Download PDF</Button>
             </a>
@@ -72,7 +74,7 @@ export function PdfViewerModal({ isOpen, onClose, title, endpoint }) {
       )}
       {!loading && !error && blobUrl && (
         <iframe
-          src={blobUrl}
+          src={allowDownload ? blobUrl : `${blobUrl}#toolbar=0&navpanes=0`}
           title={title || 'PDF document'}
           style={{
             width: '100%',

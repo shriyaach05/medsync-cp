@@ -12,6 +12,7 @@ const userRoutes = require('./routes/userRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const shareRoutes = require('./routes/shareRoutes');
+const replyRoutes = require('./routes/replyRoutes');
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/shares', shareRoutes);
+app.use('/api/replies', replyRoutes);
 
 // Catch-all 404 handler for unknown routes
 app.use((req, res) => {

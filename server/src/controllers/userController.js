@@ -147,11 +147,13 @@ const deleteAccount = async (req, res, next) => {
         await db
           .collection('shares')
           .deleteMany({ $or: [{ patient: user._id }, { doctor: user._id }] });
+        await db.collection('replies').deleteMany({ patient: user._id });
       }
     } else if (user.role === 'doctor') {
       if (db) {
         // Remove doctor from active shares
         await db.collection('shares').deleteMany({ doctor: user._id });
+        await db.collection('replies').deleteMany({ doctor: user._id });
       }
     }
 

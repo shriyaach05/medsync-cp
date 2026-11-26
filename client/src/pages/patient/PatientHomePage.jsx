@@ -8,6 +8,7 @@ import { Modal } from '../../components/Modal';
 import { SkeletonCard } from '../../components/SkeletonCard';
 import { EmptyState } from '../../components/EmptyState';
 import { PdfViewerModal } from '../../components/PdfViewerModal';
+import { ReplyViewModal } from '../../components/ReplyViewModal';
 import { AddDocumentModal } from './AddDocumentModal';
 import { EditDocumentModal } from './EditDocumentModal';
 import { SummaryModal } from './SummaryModal';
@@ -32,6 +33,8 @@ export function PatientHomePage() {
   const [summaryReport, setSummaryReport] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [replies, setReplies] = useState([]);
+  const [replyView, setReplyView] = useState(null); // replies for one report
 
   const fetchReports = useCallback(async () => {
     setLoading(true);
@@ -49,6 +52,32 @@ export function PatientHomePage() {
   useEffect(() => {
     fetchReports();
   }, [fetchReports]);
+
+  // Doctor replies, grouped by the report they belong to
+  useEffect(() => {
+    let active = true;
+    api
+      .get('/replies')
+      .then((data) => {
+        if (active) setReplies(data.replies || []);
+      })
+      .catch(() => {
+        // Replies are optional on this page; reports still load without them
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const repliesByReport = useMemo(() => {
+    const map = {};
+    for (const reply of replies) {
+      const key = String(reply.report);
+      if (!map[key]) map[key] = [];
+      map[key].push(reply);
+    }
+    return map;
+  }, [replies]);
 
   const filteredTimeline = useMemo(() => {
     if (!doctorFilter) return timeline;
@@ -265,6 +294,15 @@ export function PatientHomePage() {
                         >
                           Delete
                         </Button>
+                        {repliesByReport[report._id]?.length > 0 && (
+                          <Button
+                            size="sm"
+                            className="ms-btn--reply"
+                            onClick={() => setReplyView(repliesByReport[report._id])}
+                          >
+                            View Reply ({repliesByReport[report._id].length})
+                          </Button>
+                        )}
                       </div>
                     </Card>
                   );
@@ -319,6 +357,13 @@ export function PatientHomePage() {
         onClose={() => setPdfReport(null)}
         title={pdfReport?.reason}
         endpoint={pdfReport ? `/reports/${pdfReport._id}/file` : ''}
+      />
+
+      <ReplyViewModal
+        isOpen={Boolean(replyView)}
+        onClose={() => setReplyView(null)}
+        replies={replyView || []}
+        title="Doctor Reply"
       />
 
       <SummaryModal

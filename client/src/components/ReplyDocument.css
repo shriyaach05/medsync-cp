@@ -1,0 +1,66 @@
+/* ---------- Reply file (read-only document) ---------- */
+.ms-reply-doc {
+  background-color: var(--field-bg, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ms-reply-doc__header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ms-reply-doc__title {
+  font-size: 1.5rem;
+  margin-bottom: 14px;
+}
+
+.ms-reply-doc__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px 20px;
+  margin: 0;
+}
+
+.ms-reply-doc__meta dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.ms-reply-doc__meta dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ms-reply-doc__section h4 {
+  font-size: 1.05rem;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+
+.ms-reply-doc__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ms-reply-doc__empty {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.ms-reply-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

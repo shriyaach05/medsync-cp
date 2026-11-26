@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { Button } from '../components/Button';
 import './AppLayout.css';
 
 const DOCTOR_NAV = [
   { to: '/doctor', label: 'Inbox', end: true },
+  { to: '/doctor/replies', label: 'Replies' },
   { to: '/doctor/profile', label: 'Profile' },
 ];
 
 export function DoctorLayout() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [themeSaving, setThemeSaving] = useState(false);
+
+  const handleThemeToggle = async () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    setThemeSaving(true);
+    try {
+      const data = await api.patch('/users/me', { theme: nextTheme });
+      updateUser(data.user);
+    } catch {
+      // Theme is already saved locally in ThemeContext
+    } finally {
+      setThemeSaving(false);
+    }
+  };
 
   return (
     <div className="ms-layout">
@@ -67,6 +87,17 @@ export function DoctorLayout() {
         </nav>
 
         <div className="ms-sidebar__footer">
+          <Button
+            variant="secondary"
+            size="sm"
+            fullWidth
+            disabled={themeSaving}
+            onClick={handleThemeToggle}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            style={{ marginBottom: 'var(--space-md)' }}
+          >
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          </Button>
           <p className="ms-sidebar__user">Dr. {user?.name}</p>
           <p>{user?.department || user?.email}</p>
         </div>

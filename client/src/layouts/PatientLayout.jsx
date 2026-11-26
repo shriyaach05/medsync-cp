@@ -6,6 +6,7 @@ import './AppLayout.css';
 const PATIENT_NAV = [
   { to: '/patient', label: 'Home', end: true },
   { to: '/patient/doctors', label: 'Doctors visited' },
+  { to: '/patient/replies', label: 'Replies' },
   { to: '/patient/profile', label: 'Profile' },
   { to: '/patient/settings', label: 'Settings' },
 ];

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { api } from '../../api/client';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
@@ -6,6 +6,8 @@ import { Badge } from '../../components/Badge';
 import { SkeletonCard } from '../../components/SkeletonCard';
 import { EmptyState } from '../../components/EmptyState';
 import { PdfViewerModal } from '../../components/PdfViewerModal';
+import { Input } from '../../components/Input';
+import { ReplyEditorModal } from './ReplyEditorModal';
 import '../patient/PatientPortal.css';
 import './DoctorPortal.css';
 
@@ -30,6 +32,9 @@ export function DoctorInboxPage() {
   const [error, setError] = useState('');
   const [now, setNow] = useState(() => Date.now());
   const [activeViewer, setActiveViewer] = useState(null); // { shareId, report }
+  const [query, setQuery] = useState('');
+  const [sentReplies, setSentReplies] = useState([]);
+  const [replyTarget, setReplyTarget] = useState(null); // { share, report, patient, reply }
 
   const fetchInbox = useCallback(async () => {
     setLoading(true);
@@ -48,6 +53,28 @@ export function DoctorInboxPage() {
     fetchInbox();
   }, [fetchInbox]);
 
+  // Replies this doctor already sent (so the button can say "Edit Reply")
+  const fetchReplies = useCallback(async () => {
+    try {
+      const data = await api.get('/replies/sent');
+      setSentReplies(data.replies || []);
+    } catch {
+      // Replies are optional on this page; the inbox still works without them
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchReplies();
+  }, [fetchReplies]);
+
+  const replyByRecord = useMemo(() => {
+    const map = {};
+    for (const reply of sentReplies) {
+      map[`${reply.share}:${reply.report}`] = reply;
+    }
+    return map;
+  }, [sentReplies]);
+
   // Live 1-second countdown ticker
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,6 +92,16 @@ export function DoctorInboxPage() {
       ),
     }))
     .filter((group) => group.shares.length > 0);
+
+  // Search patients by name or email
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleInbox = normalizedQuery
+    ? activeInbox.filter(
+        (group) =>
+          group.patient.name?.toLowerCase().includes(normalizedQuery) ||
+          group.patient.email?.toLowerCase().includes(normalizedQuery)
+      )
+    : activeInbox;
 
   const formatDateTime = (dateStr) => {
     if (!dateStr) return 'Unknown';
@@ -105,6 +142,19 @@ export function DoctorInboxPage() {
         </div>
       )}
 
+      {!loading && activeInbox.length > 0 && (
+        <div className="ms-search-bar">
+          <Input
+            type="search"
+            label="Search patients"
+            placeholder="Search by patient name or email"
+            aria-label="Search patients by name or email"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+      )}
+
       {loading ? (
         <SkeletonCard count={3} />
       ) : activeInbox.length === 0 ? (
@@ -112,9 +162,15 @@ export function DoctorInboxPage() {
           title="No active shared reports"
           description="When a patient sends you their medical reports, they will appear here with a live countdown."
         />
+      ) : visibleInbox.length === 0 ? (
+        <EmptyState
+          title="No matching patients"
+          description="No patient name or email matches your search. Try a different spelling."
+          action={<Button onClick={() => setQuery('')}>Clear search</Button>}
+        />
       ) : (
         <div className="ms-inbox-groups">
-          {activeInbox.map((group) => (
+          {visibleInbox.map((group) => (
             <section key={group.patient._id}>
               <div className="ms-patient-group__header">
                 <h2 className="ms-patient-group__name">
@@ -161,15 +217,32 @@ export function DoctorInboxPage() {
                                 </span>
                               </div>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              onClick={() =>
-                                setActiveViewer({ shareId: share._id, report })
-                              }
-                            >
-                              View PDF
-                            </Button>
+                            <div className="ms-shared-report-row__actions">
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() =>
+                                  setActiveViewer({ shareId: share._id, report })
+                                }
+                              >
+                                View PDF
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  setReplyTarget({
+                                    share,
+                                    report,
+                                    patient: group.patient,
+                                    reply: replyByRecord[`${share._id}:${report._id}`] || null,
+                                  })
+                                }
+                              >
+                                {replyByRecord[`${share._id}:${report._id}`]
+                                  ? 'Edit Reply'
+                                  : 'Reply'}
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -182,10 +255,28 @@ export function DoctorInboxPage() {
         </div>
       )}
 
+      <ReplyEditorModal
+        isOpen={Boolean(replyTarget)}
+        onClose={() => setReplyTarget(null)}
+        reply={replyTarget?.reply || null}
+        context={
+          replyTarget
+            ? {
+                shareId: replyTarget.share._id,
+                reportId: replyTarget.report._id,
+                patientName: replyTarget.patient.name,
+                reportReason: replyTarget.report.reason,
+              }
+            : null
+        }
+        onSaved={() => fetchReplies()}
+      />
+
       <PdfViewerModal
         isOpen={Boolean(activeViewer)}
         onClose={() => setActiveViewer(null)}
         title={activeViewer?.report?.reason}
+        allowDownload={false}
         endpoint={
           activeViewer
             ? `/shares/${activeViewer.shareId}/reports/${activeViewer.report._id}/file`
