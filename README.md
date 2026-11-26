@@ -13,6 +13,7 @@ A secure medical records web app where patients or guardians store encrypted med
 ---
 
 ## Project Structure
+```
 MedSync/
 │
 ├── client/                     # React frontend
@@ -34,6 +35,7 @@ MedSync/
 │   └── ...
 │
 └── README.md
+```
 
 ## Live Link
 
