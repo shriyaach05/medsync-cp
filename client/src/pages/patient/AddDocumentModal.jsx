@@ -171,7 +171,7 @@ export function AddDocumentModal({ isOpen, onClose, onSaved }) {
       loading={autofilling}
       title="Autofill fields from uploaded file using Gemini AI"
     >
-      ✨ Autofill
+      Autofill
     </Button>
   );
 
@@ -244,13 +244,13 @@ export function AddDocumentModal({ isOpen, onClose, onSaved }) {
               variant="secondary"
               onClick={() => fileInputRef.current?.click()}
             >
-              📁 Upload File
+              Upload File
             </Button>
             <Button
               variant="secondary"
               onClick={() => cameraInputRef.current?.click()}
             >
-              📷 Camera / Add Photo
+              Camera / Add Photo
             </Button>
           </div>
 

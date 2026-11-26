@@ -11,30 +11,30 @@
 /* Light theme — the default */
 :root {
   /* Surfaces */
-  --color-bg: #F5EFEB;
-  --color-surface: #FFFFFF;
-  --color-elevated: #E6EEF4;
-  --color-border: #C8D9E6;
+  --color-bg: #DEDCDC;
+  --color-surface: #F4F2F3;
+  --color-elevated: #E7E1E6;
+  --color-border: #C5BAC4;
 
   /* Text */
-  --color-text-primary: #2F4156;
-  --color-text-secondary: #567C8D;
+  --color-text-primary: #191D23;
+  --color-text-secondary: #4A626C;
 
   /* Accents */
-  --color-accent: #567C8D;
-  --color-accent-strong: #2F4156;
+  --color-accent: #57707A;
+  --color-accent-strong: #191D23;
   --color-on-accent: #FFFFFF;
 
   /* Functional colors */
   --color-success: #2D8A56;
   --color-warning: #C4841D;
   --color-error: #C0392B;
-  --color-info: #567C8D;
+  --color-info: #57707A;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(47, 65, 86, 0.08);
-  --shadow-md: 0 4px 12px rgba(47, 65, 86, 0.10);
-  --shadow-lg: 0 8px 24px rgba(47, 65, 86, 0.12);
+  --shadow-sm: 0 1px 3px rgba(25, 29, 35, 0.10);
+  --shadow-md: 0 4px 12px rgba(25, 29, 35, 0.12);
+  --shadow-lg: 0 8px 24px rgba(25, 29, 35, 0.16);
 
   /* Spacing scale (multiples of 4px) */
   --space-xs: 4px;
@@ -72,22 +72,22 @@
 
 /* Dark theme — activated when <html data-theme="dark"> */
 [data-theme='dark'] {
-  --color-bg: #0F1722;
-  --color-surface: #1A2636;
-  --color-elevated: #2F4156;
-  --color-border: #3E5469;
+  --color-bg: #191D23;
+  --color-surface: #222830;
+  --color-elevated: #2D353E;
+  --color-border: #3A4650;
 
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #C8D9E6;
+  --color-text-primary: #DEDCDC;
+  --color-text-secondary: #979DAB;
 
-  --color-accent: #7FA8BA;
-  --color-accent-strong: #C8D9E6;
-  --color-on-accent: #0F1722;
+  --color-accent: #7E919F;
+  --color-accent-strong: #C5BAC4;
+  --color-on-accent: #191D23;
 
   --color-success: #3DBA6F;
   --color-warning: #E0A83D;
-  --color-error: #E05C4F;
-  --color-info: #7FA8BA;
+  --color-error: #EF766A;
+  --color-info: #7E919F;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);

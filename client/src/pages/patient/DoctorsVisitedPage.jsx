@@ -61,7 +61,6 @@ export function DoctorsVisitedPage() {
         <SkeletonCard count={2} />
       ) : doctors.length === 0 ? (
         <EmptyState
-          icon="🩺"
           title="No doctors recorded yet"
           description="Once you upload a medical report, the doctor you visited will appear here."
           action={<Button onClick={() => navigate('/patient')}>Go to Home</Button>}
@@ -85,7 +84,7 @@ export function DoctorsVisitedPage() {
                 }
               }}
             >
-              <h3>🩺 {doc.doctorName}</h3>
+              <h3>{doc.doctorName}</h3>
               <p className="ms-page-subtitle">
                 {doc.visitCount} {doc.visitCount === 1 ? 'visit' : 'visits'}
               </p>

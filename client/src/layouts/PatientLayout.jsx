@@ -4,10 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import './AppLayout.css';
 
 const PATIENT_NAV = [
-  { to: '/patient', label: 'Home', icon: '🏠', end: true },
-  { to: '/patient/doctors', label: 'Doctors visited', icon: '🩺' },
-  { to: '/patient/profile', label: 'Profile', icon: '👤' },
-  { to: '/patient/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/patient', label: 'Home', end: true },
+  { to: '/patient/doctors', label: 'Doctors visited' },
+  { to: '/patient/profile', label: 'Profile' },
+  { to: '/patient/settings', label: 'Settings' },
 ];
 
 export function PatientLayout() {
@@ -21,7 +21,7 @@ export function PatientLayout() {
       </a>
       <header className="ms-mobile-header">
         <div className="ms-brand">
-          <span className="ms-brand__logo" aria-hidden="true">+</span>
+          <img src="/logo.png" className="ms-brand__logo" alt="" aria-hidden="true" />
           <span>MedSync</span>
         </div>
         <button
@@ -46,7 +46,7 @@ export function PatientLayout() {
       <aside className={`ms-sidebar ${menuOpen ? 'ms-sidebar--open' : ''}`}>
         <div className="ms-sidebar__brand">
           <div className="ms-brand">
-            <span className="ms-brand__logo" aria-hidden="true">+</span>
+            <img src="/logo.png" className="ms-brand__logo" alt="" aria-hidden="true" />
             <span>MedSync</span>
           </div>
           <span className="ms-sidebar__role">Patient Portal</span>
@@ -63,7 +63,6 @@ export function PatientLayout() {
               }
               onClick={() => setMenuOpen(false)}
             >
-              <span aria-hidden="true">{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}

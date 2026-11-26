@@ -109,7 +109,6 @@ export function DoctorInboxPage() {
         <SkeletonCard count={3} />
       ) : activeInbox.length === 0 ? (
         <EmptyState
-          icon="📥"
           title="No active shared reports"
           description="When a patient sends you their medical reports, they will appear here with a live countdown."
         />
@@ -119,7 +118,7 @@ export function DoctorInboxPage() {
             <section key={group.patient._id}>
               <div className="ms-patient-group__header">
                 <h2 className="ms-patient-group__name">
-                  🧑 {group.patient.name}
+                  {group.patient.name}
                 </h2>
                 <span className="ms-patient-group__email">{group.patient.email}</span>
               </div>
@@ -144,7 +143,7 @@ export function DoctorInboxPage() {
                           }`}
                           title="Time remaining before access expires"
                         >
-                          ⏳ {formatCountdown(remainingMs)} left
+                          {formatCountdown(remainingMs)} left
                         </span>
                       </div>
 
@@ -169,7 +168,7 @@ export function DoctorInboxPage() {
                                 setActiveViewer({ shareId: share._id, report })
                               }
                             >
-                              📄 View PDF
+                              View PDF
                             </Button>
                           </div>
                         ))}

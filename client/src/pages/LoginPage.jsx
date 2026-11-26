@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Card } from '../components/Card';
+import { AuthVisual } from '../components/AuthVisual';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import './AuthPages.css';
@@ -54,66 +54,71 @@ export function LoginPage() {
 
   return (
     <div className="ms-auth-page">
-      <div className="ms-auth-topbar">
-        <div className="ms-auth-brand">
-          <span className="ms-auth-brand__logo" aria-hidden="true">+</span>
-          <span>MedSync</span>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-        >
-          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-        </Button>
-      </div>
-
-      <Card className="ms-auth-card">
-        <div className="ms-auth-header">
-          <h1>Welcome back</h1>
-          <p>Sign in to access your medical reports or doctor inbox.</p>
-        </div>
-
-        <form className="ms-auth-form" onSubmit={handleSubmit} noValidate>
-          {formError && (
-            <div className="ms-auth-error" role="alert">
-              {formError}
+      <div className="ms-auth-shell">
+        <div className="ms-auth-panel">
+          <div className="ms-auth-topbar">
+            <div className="ms-auth-brand">
+              <img src="/logo.png" className="ms-auth-brand__logo" alt="" aria-hidden="true" />
+              <span>MedSync</span>
             </div>
-          )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </Button>
+          </div>
 
-          <Input
-            label="Email address"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={fieldErrors.email}
-          />
+          <div className="ms-auth-card">
+            <div className="ms-auth-header">
+              <h1>Welcome to MedSync</h1>
+              <p>Patients and doctors, sign in to reach your medical reports or your doctor inbox.</p>
+            </div>
 
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            autoComplete="current-password"
-            placeholder="Enter your password"
-            showPasswordToggle
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={fieldErrors.password}
-          />
+            <form className="ms-auth-form" onSubmit={handleSubmit} noValidate>
+              {formError && (
+                <div className="ms-auth-error" role="alert">
+                  {formError}
+                </div>
+              )}
 
-          <Button type="submit" fullWidth size="lg" loading={submitting}>
-            Sign in
-          </Button>
-        </form>
+              <Input
+                label="Email address"
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={fieldErrors.email}
+              />
 
-        <div className="ms-auth-divider">
-          New to MedSync? <Link to="/register">Create an account</Link>
+              <Input
+                label="Password"
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                showPasswordToggle
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                error={fieldErrors.password}
+              />
+
+              <Button type="submit" fullWidth size="lg" loading={submitting}>
+                Sign in
+              </Button>
+            </form>
+
+            <div className="ms-auth-divider">
+              New to MedSync? <Link to="/register">Create an account</Link>
+            </div>
+          </div>
         </div>
-      </Card>
+        <AuthVisual />
+      </div>
     </div>
   );
 }

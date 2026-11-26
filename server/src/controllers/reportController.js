@@ -176,6 +176,86 @@ const getReportFile = async (req, res, next) => {
 };
 
 /**
+ * Edit report details (reason, doctor name, visit date, type)
+ * PATCH /api/reports/:id
+ */
+const updateReport = async (req, res, next) => {
+  try {
+    const report = await Report.findById(req.params.id);
+    if (!report) {
+      return res.status(404).json({ error: 'Report not found.' });
+    }
+
+    if (!report.owner.equals(req.user._id)) {
+      return res.status(403).json({
+        error: 'Access denied. You do not own this report.',
+      });
+    }
+
+    const { reason, doctorName, visitDate, type } = req.body || {};
+
+    if (
+      reason === undefined &&
+      doctorName === undefined &&
+      visitDate === undefined &&
+      type === undefined
+    ) {
+      return res.status(400).json({ error: 'No changes were provided.' });
+    }
+
+    if (reason !== undefined) {
+      if (typeof reason !== 'string' || reason.trim().length === 0) {
+        return res.status(400).json({ error: 'Visit reason is required.' });
+      }
+      if (reason.trim().length > 120) {
+        return res.status(400).json({
+          error: 'Visit reason cannot exceed 120 characters.',
+        });
+      }
+      report.reason = reason.trim();
+    }
+
+    if (doctorName !== undefined) {
+      if (typeof doctorName !== 'string' || doctorName.trim().length === 0) {
+        return res.status(400).json({ error: 'Doctor name is required.' });
+      }
+      if (doctorName.trim().length > 100) {
+        return res.status(400).json({
+          error: 'Doctor name cannot exceed 100 characters.',
+        });
+      }
+      report.doctorName = doctorName.trim();
+    }
+
+    if (visitDate !== undefined) {
+      if (!visitDate || isNaN(new Date(visitDate).getTime())) {
+        return res.status(400).json({ error: 'A valid visit date is required.' });
+      }
+      report.visitDate = new Date(visitDate);
+    }
+
+    if (type !== undefined) {
+      const validTypes = ['Lab report', 'Prescription', 'Imaging', 'Other'];
+      if (!validTypes.includes(type)) {
+        return res.status(400).json({
+          error: 'Report type must be Lab report, Prescription, Imaging, or Other.',
+        });
+      }
+      report.type = type;
+    }
+
+    await report.save();
+
+    res.status(200).json({
+      message: 'Report updated successfully.',
+      report,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Permanently delete a report and its encrypted GridFS chunks
  * DELETE /api/reports/:id
  */
@@ -334,6 +414,7 @@ module.exports = {
   createReport,
   listReports,
   getReportFile,
+  updateReport,
   deleteReport,
   autofillReport,
   generateSummary,

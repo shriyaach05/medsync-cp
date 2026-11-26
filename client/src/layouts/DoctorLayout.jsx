@@ -4,8 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import './AppLayout.css';
 
 const DOCTOR_NAV = [
-  { to: '/doctor', label: 'Inbox', icon: '📥', end: true },
-  { to: '/doctor/profile', label: 'Profile', icon: '👤' },
+  { to: '/doctor', label: 'Inbox', end: true },
+  { to: '/doctor/profile', label: 'Profile' },
 ];
 
 export function DoctorLayout() {
@@ -19,7 +19,7 @@ export function DoctorLayout() {
       </a>
       <header className="ms-mobile-header">
         <div className="ms-brand">
-          <span className="ms-brand__logo" aria-hidden="true">+</span>
+          <img src="/logo.png" className="ms-brand__logo" alt="" aria-hidden="true" />
           <span>MedSync</span>
         </div>
         <button
@@ -44,7 +44,7 @@ export function DoctorLayout() {
       <aside className={`ms-sidebar ${menuOpen ? 'ms-sidebar--open' : ''}`}>
         <div className="ms-sidebar__brand">
           <div className="ms-brand">
-            <span className="ms-brand__logo" aria-hidden="true">+</span>
+            <img src="/logo.png" className="ms-brand__logo" alt="" aria-hidden="true" />
             <span>MedSync</span>
           </div>
           <span className="ms-sidebar__role">Doctor Portal</span>
@@ -61,7 +61,6 @@ export function DoctorLayout() {
               }
               onClick={() => setMenuOpen(false)}
             >
-              <span aria-hidden="true">{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}

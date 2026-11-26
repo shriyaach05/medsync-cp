@@ -409,10 +409,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .ms-report-card__actions > :last-child {
-    grid-column: 1 / -1;
-  }
-
   .ms-floating-bar {
     bottom: var(--space-md);
     padding: 10px 14px;

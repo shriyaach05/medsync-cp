@@ -9,6 +9,7 @@ import { SkeletonCard } from '../../components/SkeletonCard';
 import { EmptyState } from '../../components/EmptyState';
 import { PdfViewerModal } from '../../components/PdfViewerModal';
 import { AddDocumentModal } from './AddDocumentModal';
+import { EditDocumentModal } from './EditDocumentModal';
 import { SummaryModal } from './SummaryModal';
 import { ShareModal } from './ShareModal';
 import './PatientPortal.css';
@@ -26,6 +27,7 @@ export function PatientHomePage() {
   const [shareOpen, setShareOpen] = useState(false);
 
   const [addOpen, setAddOpen] = useState(false);
+  const [editReport, setEditReport] = useState(null);
   const [pdfReport, setPdfReport] = useState(null);
   const [summaryReport, setSummaryReport] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -134,11 +136,12 @@ export function PatientHomePage() {
                 }
               }}
             >
-              📤 Send to doctor {selectedIds.length > 0 ? `(${selectedIds.length})` : ''}
+              Send to doctor {selectedIds.length > 0 ? `(${selectedIds.length})` : ''}
             </Button>
           )}
-          <Button onClick={() => setAddOpen(true)} size="lg">
-            <span aria-hidden="true">＋</span> Add document
+          <Button onClick={() => setAddOpen(true)} size="lg" className="ms-btn--add">
+            <span className="ms-add-icon" aria-hidden="true">+</span>
+            Add document
           </Button>
         </div>
       </div>
@@ -181,7 +184,6 @@ export function PatientHomePage() {
         <SkeletonCard count={3} />
       ) : filteredTimeline.length === 0 ? (
         <EmptyState
-          icon="📋"
           title={doctorFilter ? 'No reports for this doctor' : 'No medical documents yet'}
           description={
             doctorFilter
@@ -225,8 +227,8 @@ export function PatientHomePage() {
                           <div>
                             <h3 className="ms-report-card__title">{report.reason}</h3>
                             <div className="ms-report-card__meta">
-                              <span>🩺 {report.doctorName}</span>
-                              <span>📅 {formatDate(report.visitDate)}</span>
+                              <span>Doctor: {report.doctorName}</span>
+                              <span>Date: {formatDate(report.visitDate)}</span>
                             </div>
                           </div>
                         </div>
@@ -239,14 +241,21 @@ export function PatientHomePage() {
                           size="sm"
                           onClick={() => setPdfReport(report)}
                         >
-                          📄 View PDF
+                          View PDF
                         </Button>
                         <Button
                           variant="secondary"
                           size="sm"
                           onClick={() => setSummaryReport(report)}
                         >
-                          ✨ {report.summaryStatus === 'completed' ? 'View Summary' : 'Summary'}
+                          {report.summaryStatus === 'completed' ? 'View Summary' : 'Summary'}
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setEditReport(report)}
+                        >
+                          Edit
                         </Button>
                         <Button
                           variant="ghost"
@@ -254,7 +263,7 @@ export function PatientHomePage() {
                           onClick={() => setDeleteTarget(report)}
                           style={{ color: 'var(--color-error)' }}
                         >
-                          🗑 Delete
+                          Delete
                         </Button>
                       </div>
                     </Card>
@@ -295,6 +304,13 @@ export function PatientHomePage() {
       <AddDocumentModal
         isOpen={addOpen}
         onClose={() => setAddOpen(false)}
+        onSaved={() => fetchReports()}
+      />
+
+      <EditDocumentModal
+        isOpen={Boolean(editReport)}
+        onClose={() => setEditReport(null)}
+        report={editReport}
         onSaved={() => fetchReports()}
       />
 

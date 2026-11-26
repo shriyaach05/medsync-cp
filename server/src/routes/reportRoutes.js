@@ -53,6 +53,14 @@ router.post(
   reportController.generateSummary
 );
 
+// Edit report details: reason, doctor, date, type (Patient only)
+router.patch(
+  '/:id',
+  protect,
+  requireRole('patient'),
+  reportController.updateReport
+);
+
 // Delete report and encrypted GridFS file (Patient only)
 router.delete(
   '/:id',

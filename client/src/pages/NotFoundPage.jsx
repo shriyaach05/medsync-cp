@@ -7,7 +7,6 @@ export function NotFoundPage() {
   return (
     <div style={{ maxWidth: '520px', margin: '80px auto', padding: '0 16px' }}>
       <EmptyState
-        icon="🔍"
         title="Page not found"
         description="The page you are looking for doesn't exist or has been moved."
         action={

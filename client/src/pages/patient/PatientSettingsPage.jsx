@@ -166,14 +166,14 @@ export function PatientSettingsPage() {
               disabled={themeSaving}
               onClick={() => handleThemeSelect('light')}
             >
-              ☀️ Light mode
+              Light mode
             </Button>
             <Button
               variant={theme === 'dark' ? 'primary' : 'secondary'}
               disabled={themeSaving}
               onClick={() => handleThemeSelect('dark')}
             >
-              🌙 Dark mode
+              Dark mode
             </Button>
           </div>
         </Card>
